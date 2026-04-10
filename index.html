@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Give Props AI — MLB Pitcher Props Model</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+         background: #0f172a; color: #e2e8f0; padding: 0; min-height: 100vh; }
+  nav { background: #0f172a; border-bottom: 1px solid #1e293b; padding: 14px 32px;
+        display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .nav-brand { font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: -0.01em; }
+  .nav-brand span { color: #3b82f6; }
+  .nav-tag { font-size: 0.72rem; background: #1e3a5f; color: #93c5fd; padding: 3px 10px;
+             border-radius: 20px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .hero { padding: 64px 32px 48px; max-width: 1100px; margin: 0 auto; text-align: center; }
+  .hero-eyebrow { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+                  color: #3b82f6; margin-bottom: 16px; }
+  .hero h1 { font-size: 3rem; font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 16px;
+             letter-spacing: -0.03em; }
+  .hero h1 span { color: #3b82f6; }
+  .hero-sub { font-size: 1.05rem; color: #94a3b8; max-width: 620px; margin: 0 auto 32px; line-height: 1.7; }
+  .disclaimer-pill { display: inline-block; background: #1e293b; border: 1px solid #334155;
+                     color: #94a3b8; font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; margin-bottom: 48px; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 32px 64px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+  .stat-card { background: #1e293b; border-radius: 12px; padding: 20px 24px;
+               border: 1px solid #334155; border-top: 3px solid #3b82f6; }
+  .stat-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+                letter-spacing: 0.06em; color: #64748b; margin-bottom: 8px; }
+  .stat-val { font-size: 1.7rem; font-weight: 900; color: #fff; }
+  .stat-val.green { color: #4ade80; }
+  .stat-val.blue { color: #60a5fa; }
+  .stat-sub { font-size: 0.74rem; color: #475569; margin-top: 4px; }
+  .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+                   letter-spacing: 0.07em; color: #475569; margin-bottom: 12px; margin-top: 40px; }
+  .card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; padding: 24px; margin-bottom: 20px; }
+  .card-title { font-size: 0.9rem; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+  .card-sub { font-size: 0.8rem; color: #64748b; margin-bottom: 16px; line-height: 1.6; }
+  .tbl-wrap { border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: #1e293b; }
+  thead tr { background: #0f172a; }
+  th { text-align: left; padding: 10px 14px; font-size: 0.68rem; font-weight: 700;
+       text-transform: uppercase; letter-spacing: 0.05em; color: #475569; border-bottom: 1px solid #334155; }
+  td { padding: 12px 14px; border-bottom: 1px solid #1e293b; color: #cbd5e1; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  .total-row td { font-weight: 700; background: #0f172a; border-top: 1px solid #334155; color: #fff; }
+  .win-row { background: #052e16 !important; }
+  .loss-row { background: #2d0a0a !important; }
+  .tier-ELITE   { display:inline-block; background:#1e3a5f; color:#60a5fa; font-size:0.63rem; font-weight:700; text-transform:uppercase; padding:2px 7px; border-radius:20px; }
+  .tier-PREMIUM { display:inline-block; background:#2e1065; color:#c084fc; font-size:0.63rem; font-weight:700; text-transform:uppercase; padding:2px 7px; border-radius:20px; }
+  .tier-PICK    { display:inline-block; background:#1e293b; color:#94a3b8; font-size:0.63rem; font-weight:700; text-transform:uppercase; padding:2px 7px; border-radius:20px; border:1px solid #334155; }
+  .win-badge    { display:inline-block; background:#052e16; color:#4ade80; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .loss-badge   { display:inline-block; background:#2d0a0a; color:#f87171; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .pending-badge { display:inline-block; background:#1e293b; color:#64748b; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:20px; border:1px solid #334155; }
+  .price-pos { color: #4ade80; font-weight: 700; }
+  .price-neg { color: #e2e8f0; font-weight: 600; }
+  .mkt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .mkt-card { background: #1e293b; border-radius: 10px; border: 1px solid #334155; padding: 16px 18px; }
+  .mkt-name { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px; }
+  .mkt-record { font-size: 1.3rem; font-weight: 800; color: #fff; }
+  .mkt-roi { font-size: 0.8rem; margin-top: 3px; }
+  .mkt-detail { font-size: 0.72rem; color: #475569; margin-top: 6px; line-height: 1.6; }
+  .warn-box { background: #1c1708; border: 1px solid #713f12; border-radius: 10px; padding: 14px 18px; font-size: 0.82rem; color: #fbbf24; line-height: 1.7; margin-bottom: 14px; }
+  .info-box { background: #0c1a2e; border: 1px solid #1e3a5f; border-radius: 10px; padding: 14px 18px; font-size: 0.82rem; color: #93c5fd; line-height: 1.7; margin-bottom: 14px; }
+  .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .filter-item { background: #0f172a; border-radius: 8px; padding: 14px 16px; border: 1px solid #1e293b; }
+  .filter-name { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #60a5fa; margin-bottom: 6px; }
+  .filter-desc { font-size: 0.78rem; color: #64748b; line-height: 1.6; }
+  .clv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .clv-card { background: #0c1a2e; border-radius: 10px; border: 1px solid #1e3a5f; padding: 16px 18px; text-align: center; }
+  .clv-val { font-size: 1.4rem; font-weight: 800; color: #60a5fa; }
+  .clv-label { font-size: 0.7rem; color: #475569; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .timeline { border-left: 2px solid #1e293b; padding-left: 20px; }
+  .timeline-item { margin-bottom: 16px; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: -25px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; }
+  .timeline-date { font-size: 0.7rem; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+  .timeline-text { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; }
+  footer { background: #0f172a; border-top: 1px solid #1e293b; padding: 32px; text-align: center; font-size: 0.76rem; color: #334155; margin-top: 64px; }
+  @media (max-width: 768px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .mkt-grid { grid-template-columns: 1fr; }
+    .filter-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Give <span>Props</span> AI</div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="nav-tag">Live Tracking</div>
+    <div style="font-size:0.75rem;color:#475569;">Updated April 10, 2026 · MLB 2026</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">MLB Pitcher Props · Machine Learning Model</div>
+  <h1>Smarter picks.<br><span>Transparent results.</span></h1>
+  <div class="hero-sub">
+    A machine learning model built on Statcast data, pitcher archetypes, and lineup context.
+    Every pick tracked publicly from day one — wins, losses, and methodology all visible.
+  </div>
+  <div class="disclaimer-pill">
+    ⚠️ Live performance tracking. 54 picks tracked so far. We are not recommending bets — sample size is still small.
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="section-label">V2 Forward Test — Live Record (Apr 5, 2026 onward)</div>
+  
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Record</div>
+      <div class="stat-val green">32–22</div>
+      <div class="stat-sub">5 days · 55 picks · 59.3% win rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">P&amp;L (flat $100)</div>
+      <div class="stat-val green">+$177.86</div>
+      <div class="stat-sub">$5,400 staked · 04-05 onward</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ROI</div>
+      <div class="stat-val green">+3.3%</div>
+      <div class="stat-sub">Forward test only · filters live since Apr 5</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">By Market</div>
+      <div class="stat-val blue" style="font-size:0.95rem;margin-top:4px;">K 10–6 · H 6–3 · BB 16–13</div>
+      <div class="stat-sub">Strikeouts · Hits · Walks</div>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠️ Transparency first:</strong> 54 picks is a small sample. The model needs 100–150 forward picks before any statistical conclusions can be drawn.
+    The 75% in-sample win rate was built on data the filters were trained on — it cannot be used as a forward predictor.
+    We are tracking every pick publicly, wins and losses, to build an honest auditable record.
+  </div>
+
+  <div class="section-label">Performance by Market</div>
+  <div class="mkt-grid">
+    <div class="mkt-card">
+      <div class="mkt-name">⚡ Strikeouts</div>
+      <div class="mkt-record">10–6</div>
+      <div class="mkt-roi" style="color:#4ade80;">+$289.80 · +18.1% ROI</div>
+      <div class="mkt-detail">Away pitchers only · HIGH_K arms excluded · Model finds underpriced K totals at mid-range lines</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-name">💥 Hits Allowed</div>
+      <div class="mkt-record">6–3</div>
+      <div class="mkt-roi" style="color:#4ade80;">+$122.65 · +13.6% ROI</div>
+      <div class="mkt-detail">GB profile + K archetype signal · Small sample — monitoring for sustainability</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-name">🚶 Walks</div>
+      <div class="mkt-record">16–13</div>
+      <div class="mkt-roi" style="color:#f87171;">−$234.59 · -8.1% ROI</div>
+      <div class="mkt-detail">Most volatile market · VOLATILE_BB + AVERAGE_BB arms excluded · p_under ≥ 0.55 conviction floor</div>
+    </div></div>
+
+  <div class="section-label">Day-by-Day Results</div>
+  
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Picks</th><th>Record</th><th>Win %</th><th>ROI</th><th>P&amp;L</th><th>Running</th><th>Markets</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>04-05</strong></td><td>14</td>
+          <td style="color:#4ade80;font-weight:700;">8–6</td>
+          <td style="color:#4ade80;">57.1%</td>
+          <td style="color:#f87171;">-1.6%</td>
+          <td style="color:#f87171;">−$22.11</td>
+          <td style="color:#f87171;">−$22.11</td>
+          <td style="font-size:0.75rem;color:#475569;">K 3–2 · H 3–1 · BB 2–3</td>
+        </tr>
+        <tr>
+          <td><strong>04-06</strong></td><td>4</td>
+          <td style="color:#4ade80;font-weight:700;">3–1</td>
+          <td style="color:#4ade80;">75.0%</td>
+          <td style="color:#4ade80;">+20.7%</td>
+          <td style="color:#4ade80;">+$82.81</td>
+          <td style="color:#4ade80;">+$60.70</td>
+          <td style="font-size:0.75rem;color:#475569;">K 2–0 · BB 1–1</td>
+        </tr>
+        <tr>
+          <td><strong>04-07</strong></td><td>22</td>
+          <td style="color:#f87171;font-weight:700;">10–11</td>
+          <td style="color:#f87171;">47.6%</td>
+          <td style="color:#f87171;">-13.4%</td>
+          <td style="color:#f87171;">−$282.08</td>
+          <td style="color:#f87171;">−$221.38</td>
+          <td style="font-size:0.75rem;color:#475569;">K 3–4 · H 1–2 · BB 6–5</td>
+        </tr>
+        <tr>
+          <td><strong>04-08</strong></td><td>10</td>
+          <td style="color:#4ade80;font-weight:700;">7–3</td>
+          <td style="color:#4ade80;">70.0%</td>
+          <td style="color:#4ade80;">+22.2%</td>
+          <td style="color:#4ade80;">+$222.40</td>
+          <td style="color:#4ade80;">+$1.02</td>
+          <td style="font-size:0.75rem;color:#475569;">K 2–0 · H 1–0 · BB 4–3</td>
+        </tr>
+        <tr>
+          <td><strong>04-09</strong></td><td>5</td>
+          <td style="color:#4ade80;font-weight:700;">4–1</td>
+          <td style="color:#4ade80;">80.0%</td>
+          <td style="color:#4ade80;">+35.4%</td>
+          <td style="color:#4ade80;">+$176.84</td>
+          <td style="color:#4ade80;">+$177.86</td>
+          <td style="font-size:0.75rem;color:#475569;">H 1–0 · BB 3–1</td>
+        </tr>
+        <tr class="total-row">
+          <td><strong>TOTAL</strong></td><td><strong>55</strong></td>
+          <td style="color:#4ade80;font-weight:700;">32–22</td>
+          <td style="color:#4ade80;">59.3%</td>
+          <td style="color:#4ade80;">+3.3%</td>
+          <td style="color:#4ade80;">+$177.86</td>
+          <td style="color:#4ade80;">+$177.86</td>
+          <td style="font-size:0.75rem;color:#475569;">$5,400 staked · V2 live forward test</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:0.72rem;color:#334155;margin-top:6px;margin-bottom:32px;">
+    All picks tracked at flat $100/pick. Best available price used. Results verified via MLB Stats API.
+  </div>
+
+  <div class="section-label">Full Pick-by-Pick Log</div>
+  
+  <div class="tbl-wrap" style="margin-bottom:32px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Pitcher</th><th>Market</th><th>Line</th><th>Tier</th>
+          <th>Best Price</th><th>Pred</th><th>Actual</th><th>P&amp;L</th><th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Braxton Ashcraft</strong></td>
+          <td>💥 Hits</td>
+          <td>4.5</td>
+          <td><span class="tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="price-pos">+105</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$105.00</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Parker Messick</strong></td>
+          <td>💥 Hits</td>
+          <td>6.666666666666667</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td>—</td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#64748b;">—</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-05</td>
+          <td><strong>Taijuan Walker</strong></td>
+          <td>💥 Hits</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−150</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>7.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Tomoyuki Sugano</strong></td>
+          <td>💥 Hits</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−135</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$74.07</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-05</td>
+          <td><strong>Chase Burns</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+120</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>7.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Eric Lauer</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+103</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$103.00</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-05</td>
+          <td><strong>Kyle Harrison</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+116</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>6.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Nick Martinez</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−138</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$72.46</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Roki Sasaki</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−135</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$74.07</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-05</td>
+          <td><strong>Brandon Pfaadt</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−155</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Braxton Ashcraft</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−105</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$95.24</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-05</td>
+          <td><strong>Jacob Lopez</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−120</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>5.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-05</td>
+          <td><strong>Kodai Senga</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−185</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$54.05</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-05</td>
+          <td><strong>Lance McCullers Jr.</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−135</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-06</td>
+          <td><strong>Brandon Williamson</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−158</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$63.29</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-06</td>
+          <td><strong>Logan Gilbert</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−135</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>5.0</td>
+          <td style="color:#4ade80;">+$74.07</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-06</td>
+          <td><strong>Brandon Woodruff</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−150</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-06</td>
+          <td><strong>Janson Junk</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−220</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>1.0</td>
+          <td style="color:#4ade80;">+$45.45</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Kyle Freeland</strong></td>
+          <td>💥 Hits</td>
+          <td>6.5</td>
+          <td><span class="tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="price-neg">−120</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#4ade80;">+$83.33</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Mike Burrows</strong></td>
+          <td>💥 Hits</td>
+          <td>5.5</td>
+          <td><span class="tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="price-neg">−140</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>8.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Nathan Eovaldi</strong></td>
+          <td>💥 Hits</td>
+          <td>5.5</td>
+          <td><span class="tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="price-neg">−150</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>6.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Cade Cavalli</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+105</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#4ade80;">+$105.00</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Garrett Crochet</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>7.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−106</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>7.0</td>
+          <td style="color:#4ade80;">+$94.34</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Jacob Misiorowski</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+130</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>10.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Matthew Liberatore</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−130</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>6.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Nick Pivetta</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−113</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>8.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Noah Cameron</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>4.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+120</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>5.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Tarik Skubal</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>7.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+125</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>7.0</td>
+          <td style="color:#4ade80;">+$125.00</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Cristopher Sánchez</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−180</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$55.56</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr>
+          <td>04-07</td>
+          <td><strong>Drew Rasmussen</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−155</span></td>
+          <td style="color:#64748b;">—</td>
+          <td><span style="color:#64748b;">pending</span></td>
+          <td style="color:#64748b;">—</td>
+          <td><span class="pending-badge">PENDING</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Freddy Peralta</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−140</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Garrett Crochet</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−110</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Gavin Williams</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−170</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>5.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Jacob Misiorowski</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−200</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>4.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Kyle Freeland</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−135</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>1.0</td>
+          <td style="color:#4ade80;">+$74.07</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Mike Burrows</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−115</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>1.0</td>
+          <td style="color:#4ade80;">+$86.96</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Noah Cameron</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−180</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>1.0</td>
+          <td style="color:#4ade80;">+$55.56</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Robbie Ray</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−150</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$66.67</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-07</td>
+          <td><strong>Shane Smith</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−165</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>5.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-07</td>
+          <td><strong>Taj Bradley</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−140</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$71.43</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Shohei Ohtani</strong></td>
+          <td>💥 Hits</td>
+          <td>4.5</td>
+          <td><span class="tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="price-neg">−130</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>4.0</td>
+          <td style="color:#4ade80;">+$76.92</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Framber Valdez</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>5.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−120</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$83.33</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Grant Holmes</strong></td>
+          <td>⚡ Strikeouts</td>
+          <td>6.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−105</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>6.0</td>
+          <td style="color:#4ade80;">+$95.24</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Bailey Ober</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-pos">+100</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>1.0</td>
+          <td style="color:#4ade80;">+$100.00</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-08</td>
+          <td><strong>Bryan Woo</strong></td>
+          <td>🚶 Walks</td>
+          <td>1.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−210</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Cristian Javier</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−190</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>0.0</td>
+          <td style="color:#4ade80;">+$52.63</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Joey Cantillo</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−175</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$57.14</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-08</td>
+          <td><strong>Kyle Bradish</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−210</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-08</td>
+          <td><strong>Luis Severino</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-pos">+100</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>5.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-08</td>
+          <td><strong>Sean Burke</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−175</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$57.14</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-09</td>
+          <td><strong>Anthony Kay</strong></td>
+          <td>💥 Hits</td>
+          <td>5.5</td>
+          <td><span class="tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="price-neg">−120</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#4ade80;">+$83.33</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-09</td>
+          <td><strong>Anthony Kay</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−210</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$47.62</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-09</td>
+          <td><strong>Jeffrey Springs</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−130</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$76.92</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="loss-row">
+          <td>04-09</td>
+          <td><strong>Mick Abel</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-ELITE">ELITE</span></td>
+          <td><span class="price-neg">−145</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>3.0</td>
+          <td style="color:#f87171;">−$100.00</td>
+          <td><span class="loss-badge">LOSS</span></td>
+        </tr>
+        <tr class="win-row">
+          <td>04-09</td>
+          <td><strong>Nolan McLean</strong></td>
+          <td>🚶 Walks</td>
+          <td>2.5</td>
+          <td><span class="tier-PICK">PICK</span></td>
+          <td><span class="price-neg">−145</span></td>
+          <td style="color:#64748b;">—</td>
+          <td>2.0</td>
+          <td style="color:#4ade80;">+$68.97</td>
+          <td><span class="win-badge">WIN</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="8"><strong>TOTAL — 55 picks tracked (1 pending)</strong></td>
+          <td style="color:#4ade80;"><strong>+$177.86</strong></td>
+          <td><strong>32–22 (59.3%)</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-label">How the Model Works</div>
+  <div class="card">
+    <div class="card-title">What Give Props AI actually does</div>
+    <div class="card-sub">
+      The model predicts how many strikeouts, walks, and hits a pitcher will allow in a given start.
+      It compares that prediction to the sportsbook line — if the model is confident the line is wrong
+      and the pitcher has the right profile, it flags a pick.
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div style="background:#0f172a;border-radius:8px;padding:14px 16px;border:1px solid #1e293b;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#3b82f6;margin-bottom:8px;">Data Sources</div>
+        <div style="font-size:0.79rem;color:#64748b;line-height:1.7;">Statcast pitch-by-pitch data<br>Batter K-rate by lineup slot<br>Umpire tendency data<br>3-year pitcher history<br>Live odds from 10+ books</div>
+      </div>
+      <div style="background:#0f172a;border-radius:8px;padding:14px 16px;border:1px solid #1e293b;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#3b82f6;margin-bottom:8px;">Pitcher Archetypes</div>
+        <div style="font-size:0.79rem;color:#64748b;line-height:1.7;">Every pitcher classified by:<br>K archetype (POWER / AVG / CONTACT)<br>BB archetype (ELITE_CMD / CONTROL / VOLATILE)<br>GB profile (GROUNDBALL / FLYBALL)</div>
+      </div>
+      <div style="background:#0f172a;border-radius:8px;padding:14px 16px;border:1px solid #1e293b;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#3b82f6;margin-bottom:8px;">Edge Detection</div>
+        <div style="font-size:0.79rem;color:#64748b;line-height:1.7;">Model prediction vs consensus line<br>Confidence score (model certainty)<br>Experience multiplier (MLB track record)<br>Only picks with conf ≥ 0.35 + exp ≥ 0.97 qualify</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">V2 Filter Rules — Why We're Selective</div>
+  <div class="info-box">
+    <strong>The V2 filter exists because not all model picks are equal.</strong>
+    Early tracking (Mar 26–Apr 4) showed raw model picks at 58–62%. Applying filters improved forward results by removing structurally weak pick types.
+  </div>
+  <div class="filter-grid" style="margin-bottom:20px;">
+    <div class="filter-item">
+      <div class="filter-name">Away Strikeouts Only</div>
+      <div class="filter-desc">Home K unders hit at 42% vs 75% for away. Home pitchers face pitch count limits and crowd disruption. Single biggest filter improvement.</div>
+    </div>
+    <div class="filter-item">
+      <div class="filter-name">HIGH_K Arm Exclusion</div>
+      <div class="filter-desc">Elite strikeout pitchers at low K lines — books price these correctly. Model edge disappears for these matchups.</div>
+    </div>
+    <div class="filter-item">
+      <div class="filter-name">VOLATILE_BB + AVERAGE_BB Exclusion</div>
+      <div class="filter-desc">Pitchers who average 1.5–2+ walks per start excluded from walk bets. WILD_EFFECTIVE 1–3 (−61% ROI) in forward test confirmed this.</div>
+    </div>
+    <div class="filter-item">
+      <div class="filter-name">p_under ≥ 0.55 (Walks) — added Apr 9</div>
+      <div class="filter-desc">Raw model conviction must be ≥ 55% for walk bets. Prevents the experience multiplier from inflating borderline picks past the confidence threshold.</div>
+    </div>
+    <div class="filter-item">
+      <div class="filter-name">Confidence ≥ 0.35</div>
+      <div class="filter-desc">Model calibration score must clear 0.35 — ensures genuine confidence in the line mismatch, not just marginal above fair value.</div>
+    </div>
+    <div class="filter-item">
+      <div class="filter-name">Experience ≥ 0.97</div>
+      <div class="filter-desc">Pitcher must have sufficient MLB track record for features to be reliable. Rookies and limited-sample pitchers are excluded from core picks.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Closing Line Value — Why It Matters</div>
+  <div class="card">
+    <div class="card-title">CLV proves edge is real, independent of outcomes</div>
+    <div class="card-sub">If the market moves the line in the direction of our picks before game time, sharp money agreed with us. Consistent positive CLV = the model finds real information, not just getting lucky on results. We capture closing lines automatically on every pick.</div>
+    <div class="clv-grid">
+      <div class="clv-card">
+        <div class="clv-val">-0.200</div>
+        <div class="clv-label">Avg Line CLV</div>
+        <div style="font-size:0.72rem;color:#334155;margin-top:4px;">&gt;0 = line moved our way</div>
+      </div>
+      <div class="clv-card">
+        <div class="clv-val">0%</div>
+        <div class="clv-label">% Positive CLV</div>
+        <div style="font-size:0.72rem;color:#334155;margin-top:4px;">Target: &gt;50%</div>
+      </div>
+      <div class="clv-card">
+        <div class="clv-val">5</div>
+        <div class="clv-label">Picks w/ CLV Data</div>
+        <div style="font-size:0.72rem;color:#334155;margin-top:4px;">of 55 total picks</div>
+      </div></div>
+  </div>
+
+  <div class="section-label">Model Changelog</div>
+  <div class="card">
+    <div class="card-sub" style="margin-bottom:16px;">Every filter change is logged here with rationale. We don't hide bad results or quietly change rules.</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">Apr 5, 2026 — V2 Launch</div>
+        <div class="timeline-text">Official V2 forward test begins. Core filters: conf ≥ 0.35, exp ≥ 0.97, away-K only, real lines only, HIGH_K_ARMS / TALENTED_K_ARMS / VOLATILE_BB exclusions.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Apr 7, 2026 — HIGH_K / VOLATILE updates</div>
+        <div class="timeline-text">Noah Cameron and Nick Pivetta added to HIGH_K_ARMS. Shane Smith and Jacob Misiorowski added to VOLATILE_BB after erratic walk patterns confirmed.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Apr 8, 2026 — AVERAGE_BB archetype exclusion</div>
+        <div class="timeline-text">Pitchers classified as AVERAGE_BB (7–9% walk rate) now excluded from walk bets. Parquet 2026 result: 2–5, −49% ROI. Only CONTROL + ELITE_CMD + unclassified pitchers qualify.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Apr 9, 2026 — p_under ≥ 0.55 minimum conviction</div>
+        <div class="timeline-text">Raw model probability must be ≥ 55% for walk bets. McLean (48.7% raw p_under) triggered this — experience multiplier had inflated a coin-flip pick past the confidence threshold.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">What This Is (And What It Isn't)</div>
+  <div class="warn-box" style="margin-bottom:12px;">
+    <strong>This is not a picks service. We are not telling you to bet anything.</strong><br>
+    Give Props AI is a machine learning model in active development. We are tracking results publicly to build an honest, auditable record. The current sample (54 picks) is too small to draw conclusions from.
+  </div>
+  <div class="info-box">
+    <strong>What we are building:</strong> A transparent, data-driven system that identifies when sportsbook lines on pitcher props appear mispriced — backed by Statcast data, pitcher archetypes, and lineup context. The goal is to prove edge over a statistically significant sample before any broader claims are made.
+  </div>
+
+</div>
+
+<footer>
+  Give Props AI · MLB Pitcher Props Model · Updated April 10, 2026<br>
+  <span style="font-size:0.7rem;">Results verified via MLB Stats API · Every pick tracked from day one, wins and losses · Not financial or gambling advice</span>
+</footer>
+
+</body>
+</html>

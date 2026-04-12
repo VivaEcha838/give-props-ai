@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Give Props AI — Picks · Saturday, April 11, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+         background: #f3f4f6; padding: 32px 20px; color: #111; }
+  .page { max-width: 1100px; margin: 0 auto; }
+  .v2-badge { display:inline-block; background:#1d4ed8; color:#fff; font-size:0.68rem;
+              font-weight:700; letter-spacing:0.07em; text-transform:uppercase;
+              padding:3px 10px; border-radius:20px; margin-bottom:8px; }
+  .brand { font-size:0.75rem; font-weight:700; text-transform:uppercase;
+           letter-spacing:0.07em; color:#6b7280; margin-bottom:4px; }
+  h1 { font-size:1.55rem; font-weight:800; margin-bottom:3px; }
+  .subtitle { font-size:0.8rem; color:#6b7280; margin-bottom:18px; }
+
+  /* Info bar — two rows, clearly separated */
+  .info-bar { background:#1e3a5f; color:#e0f2fe; border-radius:8px; padding:12px 16px;
+              font-size:0.82rem; margin-bottom:18px; }
+  .info-row { display:flex; gap:20px; flex-wrap:wrap; align-items:center; }
+  .info-row + .info-row { margin-top:8px; padding-top:8px;
+                           border-top:1px solid rgba(255,255,255,0.12); }
+  .info-bar .sep { color:#4b7a9e; }
+  .v2-label { background:#1d4ed8; color:#fff; font-size:0.65rem; font-weight:700;
+               text-transform:uppercase; letter-spacing:0.06em; padding:2px 7px;
+               border-radius:10px; margin-right:4px; }
+  .v1-label { background:#4b5563; color:#fff; font-size:0.65rem; font-weight:700;
+               text-transform:uppercase; letter-spacing:0.06em; padding:2px 7px;
+               border-radius:10px; margin-right:4px; }
+
+  .section-label { font-size:0.72rem; font-weight:700; text-transform:uppercase;
+                   letter-spacing:0.06em; color:#6b7280; margin-bottom:10px; margin-top:22px; }
+  .tbl-wrap { border-radius:10px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,0.07); margin-bottom:4px; }
+  table { width:100%; border-collapse:collapse; font-size:0.86rem; background:#fff; }
+  thead tr { background:#f3f4f6; }
+  th { text-align:left; padding:9px 10px; font-size:0.72rem; font-weight:700;
+       text-transform:uppercase; letter-spacing:0.04em; color:#374151;
+       border-bottom:2px solid #e5e7eb; }
+  td { padding:12px 10px; border-bottom:1px solid #f3f4f6; vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover { background:#fafafa; }
+  .tier-badge { display:inline-block; font-size:0.65rem; font-weight:700;
+               text-transform:uppercase; letter-spacing:0.05em; padding:2px 7px; border-radius:20px; }
+  .tier-ELITE   { background:#dbeafe; color:#1d4ed8; }
+  .tier-PREMIUM { background:#f3e8ff; color:#7e22ce; }
+  .tier-PICK    { background:#f3f4f6; color:#4b5563; }
+  .pending-badge { display:inline-block; background:#f3f4f6; color:#9ca3af;
+                   font-size:0.68rem; font-weight:700; padding:2px 8px;
+                   border-radius:20px; text-transform:uppercase; }
+  .scratched-badge { display:inline-block; background:#fee2e2; color:#991b1b;
+                     font-size:0.68rem; font-weight:700; padding:2px 8px;
+                     border-radius:20px; text-transform:uppercase; letter-spacing:0.03em; }
+  .juice-badge { display:inline-block; background:#fef3c7; color:#92400e;
+                 font-size:0.63rem; font-weight:700; padding:1px 5px;
+                 border-radius:10px; margin-left:4px; vertical-align:middle; }
+  .price-pos { color:#15803d; font-weight:700; }
+  .price-neg { color:#111; font-weight:600; }
+  .footer-note { font-size:0.74rem; color:#9ca3af; line-height:1.7; margin-top:20px; }
+  /* Archetype badges */
+  .arch-badge { display:inline-block; font-size:0.58rem; font-weight:700;
+                text-transform:uppercase; letter-spacing:0.04em;
+                padding:1px 5px; border-radius:10px; white-space:nowrap; }
+  .arch-power    { background:#fde68a; color:#92400e; }
+  .arch-avg      { background:#e5e7eb; color:#374151; }
+  .arch-contact  { background:#d1fae5; color:#065f46; }
+  .arch-elite-cmd{ background:#d1fae5; color:#065f46; }
+  .arch-control  { background:#dbeafe; color:#1e40af; }
+  .arch-volatile { background:#fee2e2; color:#991b1b; }
+  .arch-wild     { background:#fef3c7; color:#92400e; border:1px solid #f59e0b; }
+  .arch-unk      { background:#f3f4f6; color:#9ca3af; }
+  a { color:#2563eb; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .v1-section-bg { background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px;
+                    padding:16px 16px 4px 16px; margin-top:8px; }
+  .hk-section-bg { background:#1a1035; border:2px dashed #7c3aed; border-radius:10px;
+                    padding:16px 16px 8px 16px; margin-top:20px; color:#e5e7eb; }
+  .hk-section-bg table { background:#1a1035; color:#e5e7eb; }
+  .hk-section-bg thead tr { background:#2d1b69; }
+  .hk-section-bg th { color:#c4b5fd; border-bottom:2px solid #4c1d95; }
+  .hk-section-bg td { border-bottom:1px solid #2d1b69; }
+  .hk-section-bg tr:hover { background:#1e1245; }
+  .exp-label { background:#7c3aed; color:#fff; font-size:0.65rem; font-weight:700;
+               text-transform:uppercase; letter-spacing:0.06em; padding:2px 7px;
+               border-radius:10px; margin-right:4px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="v2-badge">Give Props AI · Saturday, April 11, 2026</div>
+  <div class="brand">Give Props AI — Daily Picks</div>
+  <h1>Saturday, April 11, 2026</h1>
+  <div class="subtitle">4 V2 picks + 9 V1-only picks · $100 flat bet · V1 and V2 tracked separately</div>
+
+  <div class="info-bar">
+    <!-- V2 row -->
+    <div class="info-row">
+      <span><span class="v2-label">V2</span> Forward Test (from 2026-04-05): <strong>20–13 · +$235.39</strong></span>
+      <span class="sep">|</span>
+      <span>📊 In-Sample: <strong>29–6 (82.9%)</strong></span>
+      <span class="sep">|</span>
+      <span>Filters: conf≥0.35 · exp≥0.97 · away‑K · no high‑K arm traps · no volatile‑BB</span>
+    </div>
+    <!-- V1 row -->
+    <div class="info-row">
+      <span><span class="v1-label">V1</span> All Picks (from 2026-03-30): <strong>69–43 · +$993.43</strong></span>
+      <span class="sep">|</span>
+      <span>Zero extra filters — base mispriced picks only</span>
+      <span class="sep">|</span>
+      <span><a href="v2_dashboard.html" style="color:#90cdf4;">Dashboard →</a></span>
+    </div>
+  </div>
+
+  <!-- V2 PICKS SECTION -->
+  <div class="section-label">V2 Picks — 4 picks (full filter)</div>
+  <div style="font-size:0.76rem;color:#6b7280;margin-bottom:10px;">K: 1 · BB: 1 · H: 2 · conf≥0.35 · exp≥0.97 · away K only</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Pitcher</th><th>Market</th><th>Line</th>
+          <th>Tier</th><th>Archetype</th><th>Best Price</th><th>Book</th><th>Open Price</th><th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">1</td>
+          <td><strong>Braxton Ashcraft</strong> <span style="display:inline-block;background:#1d4ed8;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V2</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>H Under</td>
+          <td>4.5</td>
+          <td><span class="tier-badge tier-PREMIUM">PREMIUM</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:24% BB:8%</span></td>
+          <td class="price-neg">-110</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">2</td>
+          <td><strong>Kyle Leahy</strong> <span style="display:inline-block;background:#1d4ed8;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V2</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>H Under</td>
+          <td>5.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:22% BB:8%</span></td>
+          <td class="price-neg">-115</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">3</td>
+          <td><strong>Jack Leiter</strong> <span style="display:inline-block;background:#1d4ed8;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V2</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>K Under</td>
+          <td>5.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-volatile">VOLATILE</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:23% BB:10%</span></td>
+          <td class="price-neg">-115</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">4</td>
+          <td><strong>Janson Junk</strong> <span style="display:inline-block;background:#1d4ed8;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V2</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>BB Under</td>
+          <td>1.5</td>
+          <td><span class="tier-badge tier-PICK">PICK</span></td>
+          <td><span class="arch-badge arch-contact">CTCT</span>&nbsp;<span class="arch-badge arch-elite-cmd">ELITE-CMD</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:17% BB:3%</span></td>
+          <td class="price-neg">-155</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:4px;padding-left:4px;">
+    ✓ = away pitcher · ⚠️ = juice cap (price heavier than −160) · $100 flat bet · V2 filter applied
+  </div>
+
+  <!-- V1-ONLY PICKS SECTION -->
+  <div class="v1-section-bg">
+    
+  <div class="section-label" style="margin-top:30px;">
+    V1 Picks — 9 picks not in V2
+    <span style="font-size:0.68rem;font-weight:400;color:#9ca3af;margin-left:6px;">(no extra filters applied — base model only)</span>
+  </div>
+  <div style="font-size:0.76rem;color:#6b7280;margin-bottom:10px;">K: 1 · BB: 8 · Excluded by V2 filter (home K / high-K arm / volatile BB / conf-exp)</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Pitcher</th><th>Market</th><th>Line</th>
+          <th>Tier</th><th>Archetype</th><th>Best Price</th><th>Book</th><th>Open Price</th><th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">1</td>
+          <td><strong>Taijuan Walker</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>BB Under</td>
+          <td>2.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-contact">CTCT</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:16% BB:8%</span></td>
+          <td class="price-neg">-165 <span class="juice-badge">⚠️ JUICE</span></td>
+          <td style="font-size:0.82rem;">Hard Rock Bet</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">2</td>
+          <td><strong>Brandon Williamson</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>BB Under</td>
+          <td>2.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:20% BB:8%</span></td>
+          <td class="price-neg">-200 <span class="juice-badge">⚠️ JUICE</span></td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">3</td>
+          <td><strong>Edward Cabrera</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>BB Under</td>
+          <td>2.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-power">PWR</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:26% BB:8%</span></td>
+          <td class="price-neg">-155</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">4</td>
+          <td><strong>Braxton Ashcraft</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>K Under</td>
+          <td>4.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:24% BB:8%</span></td>
+          <td class="price-pos">+116</td>
+          <td style="font-size:0.82rem;">FanDuel</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">5</td>
+          <td><strong>Lance McCullers Jr.</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>BB Under</td>
+          <td>2.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-volatile">VOLATILE</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:22% BB:14%</span></td>
+          <td class="price-pos">+100</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">6</td>
+          <td><strong>Jacob Lopez</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>BB Under</td>
+          <td>2.5</td>
+          <td><span class="tier-badge tier-PICK">PICK</span></td>
+          <td><span class="arch-badge arch-power">PWR</span>&nbsp;<span class="arch-badge arch-wild">WILD-EFF</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:28% BB:9%</span></td>
+          <td class="price-neg">-115</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">7</td>
+          <td><strong>Braxton Ashcraft</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>BB Under</td>
+          <td>1.5</td>
+          <td><span class="tier-badge tier-PICK">PICK</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:24% BB:8%</span></td>
+          <td class="price-pos">+110</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">8</td>
+          <td><strong>Kodai Senga</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>BB Under</td>
+          <td>2.5</td>
+          <td><span class="tier-badge tier-PICK">PICK</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-volatile">VOLATILE</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:23% BB:11%</span></td>
+          <td class="price-neg">-140</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">9</td>
+          <td><strong>Brandon Pfaadt</strong> <span style="display:inline-block;background:#6b7280;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">V1</span><br><span style="font-size:0.74rem;color:#9ca3af;">@  · Away ✓</span></td>
+          <td>BB Under</td>
+          <td>1.5</td>
+          <td><span class="tier-badge tier-PICK">PICK</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-elite-cmd">ELITE-CMD</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:19% BB:5%</span></td>
+          <td class="price-neg">-120</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:0.73rem;color:#9ca3af;margin-bottom:20px;padding-left:4px;">
+    V1 picks are tracked separately · Results update after games finish
+  </div>
+  </div>
+
+  <!-- HOME K EXPERIMENTAL SECTION — NOT COUNTED IN V2 RECORD -->
+  <div class="hk-section-bg"><div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;"><span class="exp-label">Experimental</span><strong style="color:#c4b5fd;font-size:0.95rem;">Home K ELITE &mdash; Watching (edge &ge; 1.0)</strong></div><p style="color:#9ca3af;font-size:0.78rem;margin:0 0 0.8rem;">Added 2026-04-10 &middot; 5-day prior sample: <strong style="color:#4ade80;">11&ndash;3 (78.6%)</strong> &middot; These picks are <em>not</em> counted in the V2 record &mdash; tracked separately to build sample size.</p><div class="tbl-wrap" style="border-radius:8px;"><table><thead><tr><th>#</th><th>Pitcher</th><th>Market</th><th>Line</th><th>Tier</th><th>Archetype</th><th>Best Price</th><th>Book</th><th>Open Price</th><th>Result</th></tr></thead><tbody>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">1</td>
+          <td><strong>Kodai Senga</strong> <span style="display:inline-block;background:#7c3aed;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">EXP</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>K Under</td>
+          <td>6.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-volatile">VOLATILE</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:23% BB:11%</span></td>
+          <td class="price-neg">-120</td>
+          <td style="font-size:0.82rem;">Bovada</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">2</td>
+          <td><strong>Brandon Williamson</strong> <span style="display:inline-block;background:#7c3aed;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">EXP</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>K Under</td>
+          <td>5.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:20% BB:8%</span></td>
+          <td class="price-neg">-140</td>
+          <td style="font-size:0.82rem;">BetMGM</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">3</td>
+          <td><strong>Kyle Harrison</strong> <span style="display:inline-block;background:#7c3aed;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">EXP</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>K Under</td>
+          <td>5.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-avg">AVG-K</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:24% BB:9%</span></td>
+          <td class="price-pos">+110</td>
+          <td style="font-size:0.82rem;">Hard Rock Bet (OH)</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;font-size:0.8rem;">4</td>
+          <td><strong>Germán Márquez</strong> <span style="display:inline-block;background:#7c3aed;color:#fff;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">EXP</span><br><span style="font-size:0.74rem;color:#9ca3af;">vs  · Home</span></td>
+          <td>K Under</td>
+          <td>4.5</td>
+          <td><span class="tier-badge tier-ELITE">ELITE</span></td>
+          <td><span class="arch-badge arch-contact">CTCT</span>&nbsp;<span class="arch-badge arch-avg">AVG-BB</span><br><span style="font-size:0.68rem;color:#9ca3af;">K:14% BB:8%</span></td>
+          <td class="price-neg">-145</td>
+          <td style="font-size:0.82rem;">BetMGM</td>
+          <td class="" style="font-size:0.82rem;">—</td>
+          <td><span class="pending-badge">Pending</span></td>
+        </tr></tbody></table></div><div style="font-size:0.72rem;color:#9ca3af;margin-top:6px;padding-left:4px;">Home pitcher &middot; ELITE tier &middot; conf&ge;0.35 &middot; exp&ge;0.97 &middot; edge&ge;1.0 &middot; Not part of V2 forward test</div></div>
+
+  
+
+  <div class="footer-note" style="margin-top:20px;">
+    Give Props AI · <strong>V1</strong> = base model (all mispriced, no extra filters) ·
+    <strong>V2</strong> = full filter (conf, exp, away‑K, no high‑K arm traps, no volatile BB) ·
+    Records are always tracked separately ·
+    <a href="v1_inSample_archive.html">V1 Archive</a> ·
+    <a href="v2_dashboard.html">V2 Dashboard</a>
+  </div>
+
+</div>
+</body>
+</html>
